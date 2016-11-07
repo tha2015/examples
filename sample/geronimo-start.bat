@@ -1,0 +1,1 @@
+start cmd /c mvn -f sample-ear\pom.xml geronimo:start

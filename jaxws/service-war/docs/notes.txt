@@ -1,0 +1,55 @@
+SCDJWS Notes
+
+1./
+JAX-WS API 2.1 (JSR 224) - jaxws-api-2.1.jar jaxws-rt-2.1.4.jar (javax.xml.ws.*)
+	-> JAXB API 2.1 (JSR 222) - jaxb-api-2.1.jar jax-impl-2.1.7.jar (javax.xml.bind.*)
+	-> A Metadata Facility for the Java Programming Language (JSR 175) JDK5+
+	-> Web Services Metadata for the Java Platform (JSR 181) jsr181-api-1.0-MR1.jar (javax.jws.*) : 10 annonation classes
+	-> Implementing Enterprise Web Services (JSR 109)
+	-> Web Services Security (JSR 183) Withdrawn
+
+JDK6:
+	105	XML Digital-Signature APIs 	Final Release
+	173	Streaming API for XML (StAX) 	Final Release
+	181	Web-Services Metadata 	Final Release
+	199	Java Compiler API 	Final Draft
+	202	Java Class-File Speciﬁcation Update 	Final Draft
+	221	JDBC 4.0 	Final Draft
+	222	Java Architecture for XML Binding (JAXB) 2.0 	Final Release
+	223	Scripting for the Java Platform 	Final Draft
+	224	Java API for XML-Based Web Services (JAX-WS) 2.0 	Final Release
+	250	Common Annotations 	Final Release
+	269	Pluggable Annotation-Processing API 	Final Draft
+
+SOAP 1.2 (+1.1)
+WSDL 1.1 (2.0 will be supported later)
+WS-I Basic Profile 1.1
+
+---------------------------------------------------------------------------
+
+2./ JAX-WS Architecture:
+
+jaxws-api.jar (api)
+  + Runtime SPI: A part of JAX-WS that defines the contract between the JAX-WS RI runtime and Java EE.
+jaxws-rt.jar (runtime): runtime module is available at application runtime and provide the actual core Web Services framework.
+jaxws-tools.jar (tools):
+  + tools: Tools for converting WSDLs and Java source/class files to Web Services.
+  + Annotation Processor: An APT AnnotationProcessor for processing Java source files with javax.jws.* annotations and making them web services.
+  + Tools SPI: A part of JAX-WS that defines the contract between the JAX-WS RI tools and Java EE.
+
+jaxb-api.jar
+jaxb-impl.jar (runtime)
+jaxb-xjc.jar
+
+3/ JAX-WS Impl Design
+
+WSServletContextListener --> "com.sun.xml.ws.server.http.servletDelegate" : WSServletDelegate(sun-jaxws.xml)
+WSServlet -> WSServletDelegate -> ServletAdapter
+
+3/ WS Concepts
+
+ [Port Type](abstract) =  collection of [Operation]s
+ [Binding] (concrete)  =  [Port Type] + [network protocol (e.g. soap over http) and message format (e.g. document+literal)]
+ [Port] (concrete)     =  [Binding] + [network address (http://localhost:8080/service-war/myService) ]
+ [Endpoint](concrete)  =  [Port]
+ [Service](abstract)   =  SUM related [Endpoint]s

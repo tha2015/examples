@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<project>
+	<parent>
+		<groupId>com.example</groupId>
+		<artifactId>sample</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>${project.parent.groupId}</groupId>
+	<artifactId>${project.parent.artifactId}-ear</artifactId>
+	<packaging>ear</packaging>
+	<name>sample-ear</name>
+	<version>${project.parent.version}</version>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<version>5</version>
+					<defaultLibBundleDir>lib/</defaultLibBundleDir>
+				</configuration>
+			</plugin>
+
+			<!-- Usage: mvn geronimo:start, mvn geronimo:undeploy geronimo:deploy, mvn geronimo:stop-->
+			<plugin>
+				<groupId>org.apache.geronimo.plugins</groupId>
+				<artifactId>geronimo-maven-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<assemblies>
+						<assembly>
+							<id>geronimo</id>
+							<groupId>org.apache.geronimo.assemblies</groupId>
+							<artifactId>geronimo-jetty6-jee5</artifactId>
+							<version>2.0.2</version>
+							<classifier>bin</classifier>
+							<type>zip</type>
+						</assembly>
+					</assemblies>
+					<assemblyId>geronimo</assemblyId>
+					<moduleArchive>${project.build.directory}/${artifactId}-${version}.ear</moduleArchive>
+					<modulePlan>${basedir}/src/main/geronimo/geronimo-application.xml</modulePlan>
+					<moduleId>com.example/sample/1.0-SNAPSHOT/ear</moduleId>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- To provide hints for eclipse plugin -->
+		<dependency>
+			<groupId>javaee</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-ejb</artifactId>
+			<version>${project.parent.version}</version>
+			<type>ejb</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-war</artifactId>
+			<version>${project.parent.version}</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+
+</project>

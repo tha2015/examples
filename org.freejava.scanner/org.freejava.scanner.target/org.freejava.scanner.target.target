@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target includeMode="feature" name="org.freejava.scanner.target" sequenceNumber="11">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="com.google.guava" version="15.0.0.v201403281430"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.rcp.feature.group" version="4.5.0.v20150603-2331"/>
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.6.200.v20150602-1417"/>
+<unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="2.2.100.v20150601-1708"/>
+<repository location="http://download.eclipse.org/releases/mars/"/>
+</location>
+<location path="${project_loc}/p2" type="Directory"/>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.codehaus.groovy24.feature.feature.group" version="2.9.2.xx-201507131633-e45"/>
+<repository location="http://dist.springsource.org/snapshot/GRECLIPSE/e4.5/"/>
+</location>
+</locations>
+</target>
