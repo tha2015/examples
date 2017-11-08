@@ -1,0 +1,38 @@
+apply plugin:'application'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.6
+version = '1.0'
+mainClassName = "mypackage.Main"
+
+repositories {
+    mavenCentral()
+}
+configurations {
+	ajc
+}
+dependencies {
+    compile 'org.aspectj:aspectjrt:1.8.12'
+    compile 'net.spy:spymemcached:2.11.5'
+
+    testCompile 'org.aspectj:aspectjweaver:1.8.12'
+	
+	ajc "org.aspectj:aspectjtools:1.8.12"
+}
+
+compileJava {
+	doLast {
+		ant.mkdir(dir: "${buildDir}/aspectj")
+		ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties", classpath: project.configurations.ajc.asPath)
+		ant.iajc(classpath: "${configurations.compile.asPath}",
+				inpath: sourceSets.main.output.classesDir.absolutePath, 
+				destDir: "${buildDir}/aspectj", 
+				source: project.convention.plugins.java.sourceCompatibility,
+				target: project.convention.plugins.java.targetCompatibility,
+				aspectPath: sourceSets.main.output.classesDir.absolutePath,
+				showWeaveInfo: true,
+				fork: true)
+		ant.move(file: "${buildDir}/aspectj", tofile: sourceSets.main.output.classesDir.absolutePath)
+		
+	}
+}
