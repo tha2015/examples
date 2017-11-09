@@ -23,28 +23,31 @@
 <div id="app">
 
   <md-toolbar>
-    <h1 class="md-title">My Title</h1>
+    <h1 class="md-title">Register Form</h1>
   </md-toolbar>
 
   <div class="main-content">
 
-	<form novalidate @submit.stop.prevent="submit">
-	  <md-input-container>
-	    <label>Initial value</label>
-	    <md-input v-model="initialValue"></md-input>
-	  </md-input-container>
+  <p>Please enter your name below.</p>
+
+  <md-input-container>
+    <label>First Name</label>
+    <md-input v-model="firstName"></md-input>
+  </md-input-container>
+
+  <md-input-container>
+    <label>Last Name</label>
+    <md-input v-model="lastName"></md-input>
+  </md-input-container>
 
 
-	  <md-input-container>
-	    <label>With label</label>
-	    <md-input placeholder="My nice placeholder"></md-input>
-	  </md-input-container>
+  <md-button class="md-raised md-primary" v-on:click="onSubmit">Register</md-button>
 
-		<md-button class="md-raised md-primary">Button</md-button>
+  <div style="padding-top: 20px; text-align: center;">
+  <textarea cols="120" rows="15">{{ log }}</textarea>
+  </div>
 
-
-	</form>
-	</div>
+  </div>
 
 </div>
 
