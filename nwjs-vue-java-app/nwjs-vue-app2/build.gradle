@@ -1,0 +1,16 @@
+plugins {
+  id "com.moowork.node" version "1.2.0"
+}
+
+task copyjavaappjs(dependsOn: ":javaapp:build") {
+	doLast {
+		ant.copy(file: "$projectDir/../javaapp/build/gwt/out/javaapp/javaapp.js", todir: "$projectDir")
+	}
+}
+task build(type: NpmTask, dependsOn: [npmInstall, copyjavaappjs]) {
+	args = ['run', 'dist']
+}
+
+task run(type: NpmTask, dependsOn: [npmInstall, copyjavaappjs]) {
+	args = ['run', 'start']
+}
