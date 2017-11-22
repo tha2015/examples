@@ -12,9 +12,8 @@ public class MyWebApp implements EntryPoint {
     exportCalculate();
   }
 
-  public static int calculate(int a, Consumer<Integer> intConsumer) {
+  public static int calculate(int a) {
 
-	  intConsumer.accept(a * 2);
 
 	  return a * 2;
   }

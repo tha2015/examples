@@ -11,11 +11,8 @@
     },
     methods: {
     	  onSubmit: function () {
-    		  const cal = require ('./javaapp.js')
-    		  alert(cal(10, {
-    			accept:  function(r) {alert('r=' + r)}
-    		  	}
-    		  ));
+    		  const calculate = require ('./javaapp.js')
+    		  alert(calculate(10));
 
 
           alert('Writing to file form.txt your name: ' + this.firstName + ' ' + this.lastName);
