@@ -10,7 +10,15 @@ buildscript {
 	}
 }
 apply plugin: "kotlin2js"
+apply plugin: "eclipse"
 
+eclipse {
+	project {
+		buildCommand  'org.jetbrains.kotlin.ui.kotlinBuilder'
+		natures 'org.jetbrains.kotlin.core.kotlinNature'
+	}
+
+}
 sourceSets {
 	main.kotlin.srcDirs += 'src/main/kotlin'
 }
