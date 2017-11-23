@@ -1,0 +1,22 @@
+{
+  "name": "helloworld",
+  "version": "1.0.0",
+  "main": "index.html",
+  "window": {
+    "width": 800,
+    "height": 600
+  },
+  "build": {
+    "nwVersion": "0.26.5"
+  },
+  "scripts": {
+    "dist": "build --tasks win-x86,win-x64,linux-x86,linux-x64,mac-x64 --mirror https://dl.nwjs.io/ .",
+    "start": "run --x64 --mirror https://dl.nwjs.io/ ."
+  },
+  "dependencies": {
+    "kotlin": ">=1.0.4-eap-111"
+  },
+  "devDependencies": {
+    "nwjs-builder-phoenix": "^1.14.6"
+  }
+}
