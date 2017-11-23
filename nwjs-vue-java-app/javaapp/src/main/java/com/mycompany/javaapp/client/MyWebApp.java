@@ -1,7 +1,5 @@
 package com.mycompany.javaapp.client;
 
-import java.util.function.Consumer;
-
 import com.google.gwt.core.client.EntryPoint;
 
 
@@ -9,23 +7,18 @@ public class MyWebApp implements EntryPoint {
 
   @Override
   public void onModuleLoad() {
-    exportCalculate();
+	  exportMyJavaCtor();
   }
 
-  public static int calculate(int a) {
-
-
-	  return a * 2;
-  }
-
-  public native void exportCalculate() /*-{
-    var fn = $entry(@com.mycompany.javaapp.client.MyWebApp::calculate(*));
+  // Export a factory method which will create an instance of MyJavaScriptClass (with preserved method names b/c @JsType)
+  public native void exportMyJavaCtor() /*-{
+    var fn = @com.mycompany.javaapp.client.MyJavaScriptClass::new();
     if (typeof module !== 'undefined' && module.exports) {
       module.exports = fn;
     } else if (typeof self === 'object') {
-      self.calculate = fn;
+      self.getInstance = fn;
     } else {
-      window.calculate = fn;
+      window.getInstance = fn;
     }
   }-*/;
 

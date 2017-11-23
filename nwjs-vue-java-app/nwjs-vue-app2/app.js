@@ -11,8 +11,9 @@
     },
     methods: {
     	  onSubmit: function () {
-    		  const calculate = require ('./javaapp.js')
-    		  alert(calculate(10));
+    		  const myJavaScriptClassInstance = require ('./javaapp.js')();
+    		  alert(myJavaScriptClassInstance.multiply(10, 20));
+    		  alert(myJavaScriptClassInstance.add(10, 20));
 
 
           alert('Writing to file form.txt your name: ' + this.firstName + ' ' + this.lastName);
