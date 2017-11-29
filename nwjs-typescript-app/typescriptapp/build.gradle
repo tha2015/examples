@@ -1,0 +1,10 @@
+npm_install {
+	args = ['--no-package-lock']
+}
+
+task tsc(type: NpmTask) {
+	dependsOn 'npm_install'
+	args = ['run', 'build']
+}
+
+build.dependsOn 'tsc'

@@ -1,0 +1,29 @@
+{
+  "name": "typescriptwebapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "window": {
+    "width": 800,
+    "height": 600
+  },
+  "build": {
+    "nwVersion": "0.26.6"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dist": "build --tasks win-x86,win-x64,linux-x86,linux-x64,mac-x64 --mirror https://dl.nwjs.io/ .",
+    "start": "run --x64 --mirror https://dl.nwjs.io/ .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescriptapp": "file:../typescriptapp"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.53",
+    "typescript": "^2.6.1",
+    "nwjs-builder-phoenix": "^1.14.6"
+  }
+}

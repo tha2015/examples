@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+	    "strict": true,
+	    "module": "commonjs",
+	    "moduleResolution": "node",
+		"declaration": true,
+
+		"outDir": "./dist"
+	},
+	"include": [
+        "lib/**/*"
+    ],
+    "exclude": [
+		"node_modules",
+		"dist",
+		"js",
+        "**/*.spec.ts"
+    ]
+}

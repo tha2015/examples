@@ -1,0 +1,22 @@
+
+npm_install {
+	dependsOn ':typescriptapp:build'
+	args = ['--force --no-package-lock']
+}
+
+task tsc(type: NpmTask, dependsOn: 'npm_install') {
+	args = ['run', 'build']
+}
+
+task dist(type: NpmTask, dependsOn: 'tsc') {
+	args = ['run', 'dist']
+}
+
+task run(type: NpmTask,  dependsOn: 'tsc') {
+	args = ['run', 'start']
+}
+
+build.dependsOn 'dist'
+
+
+
