@@ -2,8 +2,7 @@ declare var Vue:any; // Magic
 declare var VueMaterial:any; // Magic
 
 
-const app = require ('typescriptapp');
-//import { sayHello as sayHello} from "typescriptapp";
+import { sayHello as sayHello} from "typescriptapp";
 
 Vue.use(VueMaterial);
 
@@ -16,7 +15,7 @@ data: {
 },
 methods: {
         onSubmit: function () {
-            alert(app.sayHello("John"));
+            alert(sayHello("John"));
     }
 }
 });
