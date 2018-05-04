@@ -12,7 +12,7 @@ mainClassName = "texttospeech.Main"
 
 dependencies {
 
-    compile 'com.google.cloud:google-cloud-texttospeech:0.41.0-beta'
+    compile 'com.google.cloud:google-cloud-texttospeech:0.46.0-beta'
 	compile 'net.sourceforge.argparse4j:argparse4j:0.8.1'
 
 
