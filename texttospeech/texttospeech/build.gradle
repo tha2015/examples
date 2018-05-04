@@ -14,6 +14,7 @@ dependencies {
 
     compile 'com.google.cloud:google-cloud-texttospeech:0.46.0-beta'
 	compile 'net.sourceforge.argparse4j:argparse4j:0.8.1'
+	compile 'io.netty:netty-tcnative-boringssl-static:2.0.6.Final'
 
 
     testImplementation 'junit:junit:4.12'
