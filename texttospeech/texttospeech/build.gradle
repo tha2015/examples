@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+}
+
+
+
+
+
+dependencies {
+
+    compile 'com.google.cloud:google-cloud-texttospeech:0.41.0-beta'
+	compile 'net.sourceforge.argparse4j:argparse4j:0.8.1'
+
+
+    testImplementation 'junit:junit:4.12'
+}
+
