@@ -1,3 +1,50 @@
-dependencies {
-    compile project(':org.example.hellolib')
+import org.gradle.plugins.ide.eclipse.model.ProjectDependency
+
+plugins {
+    id 'application'
+	id 'eclipse'
 }
+
+dependencies {
+    implementation project(':org.example.hellolib')
+}
+
+ext.moduleName = 'org.example.helloapp'
+
+compileJava {
+	inputs.property("moduleName", moduleName)
+	doFirst {
+		options.compilerArgs = [
+			'--module-path', classpath.asPath,
+		]
+		classpath = files()
+	}
+}
+
+eclipse {
+	classpath {
+		file {
+			whenMerged {
+				entries.findAll { true }.each { //(1)
+					println it
+				}
+				entries.findAll { isModule(it) }.each { //(1)
+					it.entryAttributes['module'] = 'true'
+				}
+
+				entries.findAll { isSource(it) && isTestScope(it) }.each {
+					it.entryAttributes['test'] = 'true'
+				}
+
+				entries.findAll { isLibrary(it) && isTestScope(it) }.each {
+					it.entryAttributes['test'] = 'true'
+				}
+			}
+		}
+	}
+}
+boolean isLibrary(entry) { return entry.properties.kind.equals('lib') }
+boolean isProject(entry) { return entry instanceof ProjectDependency }
+boolean isTestScope(entry) { return entry.entryAttributes.get('gradle_used_by_scope').equals('test') }
+boolean isModule(entry) { ( isLibrary(entry) || isProject(entry) ) && !isTestScope(entry) }
+boolean isSource(entry) { return entry.properties.kind.equals('src') }
