@@ -3,13 +3,16 @@ import org.gradle.plugins.ide.eclipse.model.ProjectDependency
 plugins {
     id 'java-library'
     id 'eclipse'
-    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'  
+    id 'org.gradle.java.experimental-jigsaw' version '0.1.1'
 
 }
 
 
 dependencies {
     implementation 'org.apache.commons:commons-lang3:3.5'
+
+	testImplementation 'junit:junit:4.12'
+
 }
 
 javaModule.name = 'org.example.hellolib'

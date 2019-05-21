@@ -3,9 +3,12 @@ package org.example.helloapp;
 import org.example.hellolib.HelloLib;
 
 public class HelloApp {
-	public static void main(String[] args) {
+	public String getGreetings() {
 		HelloLib lib = new HelloLib();
-		System.out.println(lib.getGreetingMessage("Alice"));
+		return lib.getGreetingMessage("Alice");
+	}
+	public static void main(String[] args) {
+		System.out.println(new HelloApp().getGreetings());
 	}
 }
 
