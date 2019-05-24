@@ -8,6 +8,7 @@ plugins {
 
 dependencies {
     implementation project(':org.example.hellolib')
+    implementation 'org.apache.commons:commons-lang3:3.5'
 
 	testImplementation 'junit:junit:4.12'
 
