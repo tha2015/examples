@@ -1,16 +1,16 @@
 package org.example.helloapp;
 
-import org.apache.commons.lang3.StringUtils;
-import org.example.hellolib.HelloLib;
+import java.util.ServiceLoader;
+import java.util.function.IntSupplier;
+
 
 public class HelloApp {
-	public String getGreetings() {
-		HelloLib lib = new HelloLib();
-		return lib.getGreetingMessage("Alice");
+	public int getServiceNumber() {
+		ServiceLoader<IntSupplier> loader =  ServiceLoader.load(java.util.function.IntSupplier.class);
+		return loader.iterator().next().getAsInt();
 	}
 	public static void main(String[] args) {
-		System.out.println(StringUtils.capitalize("alice"));
-		System.out.println(new HelloApp().getGreetings());
+		System.out.println(new HelloApp().getServiceNumber());
 	}
 }
 

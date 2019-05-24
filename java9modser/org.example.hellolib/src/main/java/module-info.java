@@ -1,4 +1,5 @@
 module org.example.hellolib {
-	requires org.apache.commons.lang3;
 	exports org.example.hellolib;
+
+	provides java.util.function.IntSupplier with org.example.hellolib.MyIntSupplier;
 }
