@@ -1,0 +1,3 @@
+rootProject.name = 'java9mods'
+
+include 'org.example.hellolib', 'org.example.helloapp'
