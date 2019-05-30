@@ -16,7 +16,7 @@ dependencies {
 
 javaModule.name = 'org.example.helloapp'
 application {
-    mainClassName = 'org.example.helloapp.HeeloApp'
+    mainClassName = 'org.example.helloapp.HelloApp'
 }
 eclipse {
 	classpath {
