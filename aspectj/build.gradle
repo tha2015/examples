@@ -1,7 +1,6 @@
 apply plugin:'application'
 apply plugin: 'eclipse'
 
-sourceCompatibility = 1.6
 version = '1.0'
 mainClassName = "mypackage.Main"
 
@@ -10,10 +9,9 @@ repositories {
 }
 
 dependencies {
-    compile 'org.aspectj:aspectjrt:1.8.4'
-    compile 'net.spy:spymemcached:2.11.5'
+    compile 'org.aspectj:aspectjrt:1.9.4'
 
-    testCompile 'org.aspectj:aspectjweaver:1.8.4'
+    testCompile 'org.aspectj:aspectjweaver:1.9.4'
 }
 
 
