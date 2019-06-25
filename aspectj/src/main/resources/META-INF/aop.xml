@@ -4,7 +4,7 @@
   </aspects>
   <weaver options="-verbose">
     <include within="mypackage..*"/>
-    <include within="aspects.*"/>
+    <include within="aspects.*"/><!-- allow weaver to add aspectOf method to TestAspect.class because it was compiled by javac (finish off) -->
   </weaver>
 
 </aspectj>
