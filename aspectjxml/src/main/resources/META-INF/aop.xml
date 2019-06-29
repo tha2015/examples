@@ -2,6 +2,7 @@
 
   <aspects>
 
+    <!-- POJO style with static methods -->
     <concrete-aspect name="aspects.BeforeMethodTracingAspect_generated">
       <before pointcut="execution(* mypackage..*(..))" invokeClass="aspects.BeforeMethodTracingAspect" invokeMethod="run(JoinPoint tjp)"/>
     </concrete-aspect>
@@ -13,6 +14,13 @@
     <concrete-aspect name="aspects.AroundMethodTracingAspect_generated">
       <around pointcut="execution(* mypackage..*(..))" invokeClass="aspects.AroundMethodTracingAspect" invokeMethod="run(ProceedingJoinPoint tjp)"/>
     </concrete-aspect>
+
+
+    <!-- @Aspect style with abstract pointcut method to be configurable in XML -->
+    <concrete-aspect name="aspects.BeforeMethodTracing2Aspect_generated" extends="aspects.BeforeMethodTracing2Aspect">
+      <pointcut name="tracingScope" expression="execution(* mypackage..*(..))"/>
+    </concrete-aspect>
+
 
   </aspects>
 
