@@ -2,15 +2,15 @@
 
   <aspects>
 
-    <concrete-aspect name="aspects.BeforeMethodTracingAspect__">
+    <concrete-aspect name="aspects.BeforeMethodTracingAspect_generated">
       <before pointcut="execution(* mypackage..*(..))" invokeClass="aspects.BeforeMethodTracingAspect" invokeMethod="run(JoinPoint tjp)"/>
     </concrete-aspect>
 
-    <concrete-aspect name="aspects.AfterMethodTracingAspect__">
+    <concrete-aspect name="aspects.AfterMethodTracingAspect_generated">
       <after pointcut="execution(* mypackage..*(..))" invokeClass="aspects.AfterMethodTracingAspect" invokeMethod="run(JoinPoint tjp)"/>
     </concrete-aspect>
 
-    <concrete-aspect name="aspects.AroundMethodTracingAspect__">
+    <concrete-aspect name="aspects.AroundMethodTracingAspect_generated">
       <around pointcut="execution(* mypackage..*(..))" invokeClass="aspects.AroundMethodTracingAspect" invokeMethod="run(ProceedingJoinPoint tjp)"/>
     </concrete-aspect>
 
@@ -20,7 +20,6 @@
 
     <include within="mypackage..*"/>
 
-    <include within="aspects.*"/><!-- allow weaver to add aspectOf method to TestAspect.class because it was compiled by javac (finish off) -->
   </weaver>
 
 </aspectj>
