@@ -1,0 +1,22 @@
+apply plugin:'application'
+apply plugin: 'eclipse'
+
+version = '1.0'
+mainClassName = "mypackage.Main"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.aspectj:aspectjrt:1.9.4'
+
+    testCompile 'org.aspectj:aspectjweaver:1.9.4'
+}
+
+
+
+run.doFirst {
+    applicationDefaultJvmArgs = ["-javaagent:" + project.configurations.testCompile.find { it.name.startsWith("aspectjweaver-") }]
+}
+
