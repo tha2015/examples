@@ -6,6 +6,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 
+import java.util.Arrays;
+
 @Aspect
 public abstract class BeforeMethodTracing2Aspect {
 
@@ -15,7 +17,8 @@ public abstract class BeforeMethodTracing2Aspect {
 
     @Before("tracingScope()")
     public void run(JoinPoint tjp) {
-        System.out.println("BEFORE2 " + tjp.getSignature().getName());
+        System.out.println("BEFORE2 " + tjp.getSignature().getName() + "(" + Arrays.toString(tjp.getArgs()) + ")");
+
     }
 
 }
