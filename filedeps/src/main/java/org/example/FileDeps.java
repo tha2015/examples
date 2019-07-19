@@ -1,12 +1,11 @@
 package org.example;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,7 +18,7 @@ public class FileDeps {
 
     public static void main(String[] args) throws IOException {
 
-        List<Path> files;
+        final List<Path> files;
 
 
         if (args.length > 0) {
@@ -43,6 +42,13 @@ public class FileDeps {
 
         System.out.println(files);
 
+
+        FileDepsBuilder builder = new FileDepsBuilder();
+
+        final var deps = builder.buildDependencies(files);
+
+        System.out.println(deps);
     }
+
 
 }

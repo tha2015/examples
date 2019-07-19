@@ -1,0 +1,49 @@
+package org.example;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.*;
+
+public class FileDepsBuilderTest {
+    final Path d1 = Paths.get("src/main/java/org/example/FileDeps.java");
+    final Path d2 = Paths.get("src/main/java/org/example/FileDepsBuilder.java");
+    final Path d3 = Paths.get("src/main/java/org/Filedeps.java");
+    final FileDepsBuilder builder = new FileDepsBuilder();
+
+    @Test
+    public void testGetDuplicateNames() {
+
+
+        assertEquals(0, builder.getDuplicateNames(List.of(d1, d2)).size());
+
+        final List<Path> duplicateNames = builder.getDuplicateNames(List.of(d1, d2, d3));
+
+        assertEquals(2, duplicateNames.size());
+
+        assertTrue(duplicateNames.contains(d1));
+
+        assertTrue(duplicateNames.contains(d3));
+    }
+
+    @Test
+    public void testBuildDependencies() {
+
+        final var deps = builder.buildDependencies(List.of(d1, d2));
+
+        assertEquals(2, deps.size());
+
+        assertEquals(1, deps.get(d1).size());
+
+        assertEquals(0, deps.get(d2).size());
+
+        assertEquals(d2, deps.get(d1).iterator().next());
+
+        System.out.println(deps);
+    }
+}
