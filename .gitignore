@@ -7,3 +7,5 @@ build
 javaapp.js
 form.txt
 kotlinapp.js
+.idea/
+*.iml
