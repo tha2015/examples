@@ -11,15 +11,16 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 public class FileDepsBuilderTest {
-    final Path d1 = Paths.get("src/main/java/org/example/FileDeps.java");
-    final Path d2 = Paths.get("src/main/java/org/example/FileDepsBuilder.java");
-    final Path d3 = Paths.get("src/main/java/org/Filedeps.java");
+
     final FileDepsBuilder builder = new FileDepsBuilder();
 
     @Test
     public void testGetDuplicateNames() {
 
-
+        final Path d1 = Paths.get("src/main/java/org/example/FileDeps.java");
+        final Path d2 = Paths.get("src/main/java/org/example/FileDepsBuilder.java");
+        final Path d3 = Paths.get("src/main/java/org/Filedeps.java");
+        
         assertEquals(0, builder.getDuplicateNames(List.of(d1, d2)).size());
 
         final List<Path> duplicateNames = builder.getDuplicateNames(List.of(d1, d2, d3));
@@ -33,7 +34,9 @@ public class FileDepsBuilderTest {
 
     @Test
     public void testBuildDependencies() {
-
+        final Path d1 = Paths.get("src/test/resources/file1.xml");
+        final Path d2 = Paths.get("src/test/resources/file2.xml");
+        
         final var deps = builder.buildDependencies(List.of(d1, d2));
 
         assertEquals(2, deps.size());

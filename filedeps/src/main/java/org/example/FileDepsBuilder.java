@@ -1,11 +1,14 @@
 package org.example;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
@@ -19,6 +22,16 @@ public class FileDepsBuilder {
         final List<Path> duplicateNames = getDuplicateNames(files);
         if (!duplicateNames.isEmpty()) {
             System.err.println("ERROR: Duplicate file names:" + duplicateNames);
+
+            final var duplicateWithSameContent = getDuplicateContents(duplicateNames);
+
+            System.err.println("ERROR: Duplicate content:" + duplicateWithSameContent);
+
+            System.err.println("ERROR: Duplicate name but content:" +
+                    duplicateNames.stream().filter(f-> duplicateWithSameContent.stream().flatMap(c->c.stream()).noneMatch(g->g.equals(f))).collect(toList()));
+
+            // Remove all files with same name
+            files.removeAll(duplicateNames);
         }
 
 
@@ -28,28 +41,59 @@ public class FileDepsBuilder {
         // map file to name
         final Map<String, Path> name2File = files.stream().collect(toMap(p -> getName(p), identity()));
 
-        Map<Path, Set<Path>> deps = new HashMap<>();
+        final Map<Path, Set<Path>> dependencies = new HashMap<>();
+
+        // build parent-child dependencies
         files.forEach(p -> {
-            final String name = getName(p);
-
             name2Content.entrySet().stream()
-                    .filter(e -> !e.getKey().equals(name))
-                    .filter(e -> isContains(name, e))
+                    .filter(e -> !e.getKey().equalsIgnoreCase(getName(p)))
+                    .filter(e -> isContains(getName(p), e))
                     .forEach(e -> {
-
                         Path parent = name2File.get(e.getKey());
-
-                        deps.merge(parent, new HashSet<>(Arrays.asList(p)), (v1,v2) -> { v1.addAll(v2); return v1;});
-
-
+                        dependencies.merge(parent, new HashSet<>(Arrays.asList(p)), (v1,v2) -> { v1.addAll(v2); return v1;});
                     });
+        });
 
+        /*
+        // add missing nodes (which don't have parent)
+        final Map<Path, Set<Path>> deps2 = dependencies.entrySet().stream().flatMap(e -> e.getValue().stream()).distinct()
+                .filter(p -> ! dependencies.keySet().contains(p))
+                .collect(Collectors.toMap(p->p, p-> Collections.emptySet()));
+        dependencies.putAll(deps2);
+*/
+
+
+        return dependencies;
+
+    }
+
+    public void printToDot(Map<Path, Set<Path>> dependencies, PrintWriter writer) {
+
+        writer.format("digraph \"FileDeps\" {%n");
+
+
+        dependencies.entrySet().stream().flatMap(e -> e.getValue().stream().map(to -> new Path[] {e.getKey(), to})).forEach(pair -> {
+            Path from = pair[0];
+            Path to = pair[1];
+
+            writer.format("   %-50s -> \"%s\";%n",
+                    String.format("\"%s\"", from.toString()),
+                    String.format("%s", to.toString()));
 
 
         });
 
-        return deps;
 
+        writer.println("}");
+    }
+
+    private List<List<Path>> getDuplicateContents(List<Path> files) {
+
+        final Map<String, List<Path>> content2File = files.stream().collect(groupingBy(f -> read(f)));
+
+        final List<List<Path>> groups = content2File.entrySet().stream().filter(e -> e.getValue().size() > 1).map(e -> e.getValue()).collect(toList());
+
+        return groups;
     }
 
     public boolean isContains(String name, Map.Entry<String, String> e) {
@@ -61,7 +105,9 @@ public class FileDepsBuilder {
     }
 
     public List<Path> getDuplicateNames(List<Path> files) {
-        return files.stream().collect(groupingBy(p -> getName(p).toUpperCase())).entrySet().stream().filter(e -> e.getValue().size() > 1).flatMap(
+        return files.stream().collect(groupingBy(p -> getName(p).toUpperCase()))
+                .entrySet().stream()
+                .filter(e -> e.getValue().size() > 1).flatMap(
                 e -> e.getValue().stream()).distinct().collect(toList());
     }
 

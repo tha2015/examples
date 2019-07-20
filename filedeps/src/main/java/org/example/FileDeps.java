@@ -2,6 +2,8 @@ package org.example;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,11 +24,15 @@ public class FileDeps {
 
 
         if (args.length > 0) {
+
+            files = Files.readAllLines(Paths.get(args[0])).stream().map(p -> Paths.get(p).toAbsolutePath().normalize()).collect(Collectors.toList());
+/*
             var path = args[0];
 
             try (Stream<Path> pathStream = Files.find(Paths.get(path), Integer.MAX_VALUE, (f, a) -> FileDeps.validFile(f))) {
                 files = pathStream.map(p -> p.toAbsolutePath().normalize()).collect(Collectors.toList());
             }
+*/
 
         } else {
 
@@ -40,7 +46,7 @@ public class FileDeps {
 
         }
 
-        System.out.println(files);
+        System.out.println(files.stream().sorted().collect(Collectors.toList()));
 
 
         FileDepsBuilder builder = new FileDepsBuilder();
@@ -48,6 +54,11 @@ public class FileDeps {
         final var deps = builder.buildDependencies(files);
 
         System.out.println(deps);
+
+        try (Writer w = Files.newBufferedWriter(Paths.get("out.dot"))) {
+            builder.printToDot(deps, new PrintWriter(w));
+        }
+
     }
 
 

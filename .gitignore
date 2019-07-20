@@ -9,3 +9,5 @@ form.txt
 kotlinapp.js
 .idea/
 *.iml
+
+/filedeps/out.dot
