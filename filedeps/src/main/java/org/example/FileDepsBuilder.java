@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 import static org.apache.commons.lang3.StringUtils.indexOfIgnoreCase;
@@ -87,8 +86,8 @@ public class FileDepsBuilder {
 
                     char charAfterName = (foundIdx + f2name.length() >= f1text.length()) ? '\0' : f1text.charAt(foundIdx + f2name.length());
                     if (!isPathCharNotSpace(charAfterName)) {
-                        Path p = extractPath(f1text, f2name, last, foundIdx);
-                        Path p2 = findClosestMatch(p, files, f1);
+                        Path p = f1.resolveSibling(extractPath(f1text, f2name, foundIdx)).normalize();
+                        Path p2 = findClosestMatch(p, files);
 
                         if (p2 == f2) return true;
                     }
@@ -103,9 +102,10 @@ public class FileDepsBuilder {
         return false;
     }
 
-    private Path extractPath(String f1text, String f2name, int last, int foundIdx) {
+    private Path extractPath(String f1text, String f2name, int foundIdx) {
         int startPath = foundIdx;
-        while (startPath > last && isPathChar(f1text.charAt(startPath))) {
+
+        while (startPath >= 0 && isPathChar(f1text.charAt(startPath))) {
             startPath --;
         }
         startPath ++;
@@ -114,13 +114,36 @@ public class FileDepsBuilder {
         return Paths.get(pathStr).normalize();
     }
 
-    private Path findClosestMatch(Path p, List<Path> ps, Path base) {
-        final List<Path> matchName = ps.stream().map(p -> p.getFileName()).filter(n -> n.toString().equalsIgnoreCase(p.getFileName().toString())).collect(toList());
-        if (matchName.size() == 1) {
-            return matchName.get(0);
-        } else {
+    private Path findClosestMatch(Path p, List<Path> ps) {
+
+        // match full path
+        final List<Path> matchPaths = ps.stream().filter(n -> n.equals(p)).collect(toList());
+        if (matchPaths.size() > 0) {
+            return matchPaths.get(0);
+        }
+
+        // match names ignore case
+        final List<Path> matchNames = ps.stream().map(Path::getFileName).filter(n -> n.toString().equalsIgnoreCase(p.getFileName().toString())).collect(toList());
+        if (matchNames.size() == 1) {
+            return matchNames.get(0);
+        } else if (matchNames.size() > 0 ){
+
             // multiple matching names
-            ???
+            int i = 1;
+            while (matchNames.size() > 1 && p.getNameCount() >= i) {
+                String name = p.getName(p.getNameCount() - i).toString();
+                int pos = i;
+                matchNames.removeIf(pp -> pp.getNameCount() < pos || ! pp.getName(pp.getNameCount() - pos).toString().equalsIgnoreCase(name));
+
+                i ++;
+            }
+            if (matchNames.size() == 1) {
+                return matchNames.get(0);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 
