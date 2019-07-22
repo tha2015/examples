@@ -1,24 +1,24 @@
 package org.example;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
+import static org.apache.commons.lang3.StringUtils.indexOfIgnoreCase;
 
 public class FileDepsBuilder {
 
     public Map<Path, Set<Path>> buildDependencies(final List<Path> files) {
 
         // Validate input
-
+/*
         final List<Path> duplicateNames = getDuplicateNames(files);
         if (!duplicateNames.isEmpty()) {
             System.err.println("ERROR: Duplicate file names:" + duplicateNames);
@@ -42,8 +42,11 @@ public class FileDepsBuilder {
         final Map<String, Path> name2File = files.stream().collect(toMap(p -> getName(p), identity()));
 
         final Map<Path, Set<Path>> dependencies = new HashMap<>();
-
+*/
         // build parent-child dependencies
+
+        final Map<Path, Set<Path>> dependencies = files.stream().flatMap(f1 -> files.stream().filter(f2 -> fileHasReferences(f1, f2, files)).map(f2 -> new Path[]{f1, f2})).collect(groupingBy(p -> p[0], mapping(p -> p[1], toSet())));
+/*
         files.forEach(p -> {
             name2Content.entrySet().stream()
                     .filter(e -> !e.getKey().equalsIgnoreCase(getName(p)))
@@ -54,7 +57,7 @@ public class FileDepsBuilder {
                     });
         });
 
-        /*
+
         // add missing nodes (which don't have parent)
         final Map<Path, Set<Path>> deps2 = dependencies.entrySet().stream().flatMap(e -> e.getValue().stream()).distinct()
                 .filter(p -> ! dependencies.keySet().contains(p))
@@ -65,6 +68,68 @@ public class FileDepsBuilder {
 
         return dependencies;
 
+    }
+
+    public boolean fileHasReferences(Path f1, Path f2, List<Path> files) {
+
+        if (!f1.equals(f2) && Files.isRegularFile(f1) && Files.isRegularFile(f2)) {
+            var f1text = readFile(f1);
+
+            var f2name = f2.getFileName().toString();
+
+            int last = -1;
+
+            while (last + 1 < f1text.length()) {
+
+                int foundIdx = indexOfIgnoreCase(f1text, f2name, last + 1);
+                if (foundIdx != -1) {
+                    // found name, check path
+
+                    char charAfterName = (foundIdx + f2name.length() >= f1text.length()) ? '\0' : f1text.charAt(foundIdx + f2name.length());
+                    if (!isPathCharNotSpace(charAfterName)) {
+                        Path p = extractPath(f1text, f2name, last, foundIdx);
+                        Path p2 = findClosestMatch(p, files, f1);
+
+                        if (p2 == f2) return true;
+                    }
+
+
+                    last = foundIdx + f2name.length() - 1;
+                } else {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Path extractPath(String f1text, String f2name, int last, int foundIdx) {
+        int startPath = foundIdx;
+        while (startPath > last && isPathChar(f1text.charAt(startPath))) {
+            startPath --;
+        }
+        startPath ++;
+
+        String pathStr = f1text.substring(startPath, foundIdx + f2name.length()).replace('\\', '/');
+        return Paths.get(pathStr).normalize();
+    }
+
+    private Path findClosestMatch(Path p, List<Path> ps, Path base) {
+        final List<Path> matchName = ps.stream().map(p -> p.getFileName()).filter(n -> n.toString().equalsIgnoreCase(p.getFileName().toString())).collect(toList());
+        if (matchName.size() == 1) {
+            return matchName.get(0);
+        } else {
+            // multiple matching names
+            ???
+        }
+    }
+
+    private boolean isPathChar(char c) {
+        return c == ' ' || isPathCharNotSpace(c);
+    }
+
+    private boolean isPathCharNotSpace(char c) {
+        return StringUtils.isAlphanumeric(String.valueOf(c)) ||  (c == '\\') ||  (c == '/');
     }
 
     public void printToDot(Map<Path, Set<Path>> dependencies, PrintWriter writer) {
@@ -86,7 +151,7 @@ public class FileDepsBuilder {
 
         writer.println("}");
     }
-
+/*
     private List<List<Path>> getDuplicateContents(List<Path> files) {
 
         final Map<String, List<Path>> content2File = files.stream().collect(groupingBy(f -> read(f)));
@@ -110,10 +175,18 @@ public class FileDepsBuilder {
                 .filter(e -> e.getValue().size() > 1).flatMap(
                 e -> e.getValue().stream()).distinct().collect(toList());
     }
+*/
 
-    private String read(Path f) {
+    private Map<Path, String> fileCache = new HashMap<>();
+
+    private String readFile(Path f) {
+
+        if (fileCache.containsKey(f)) return fileCache.get(f);
+
         try {
-            return Files.readString(f);
+            fileCache.put(f, Files.readString(f));
+            return fileCache.get(f);
+
         } catch (IOException e) {
             e.printStackTrace();
             return "";
